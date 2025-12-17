@@ -1,0 +1,12 @@
+{
+  "name": "mdcheck-amd-rocm",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "../docker-compose.amd.yml"
+  ],
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "overrideCommand": true,
+  "postCreateCommand": "uv sync",
+  "postStartCommand": "uv run mdcheck --pull-model"
+}

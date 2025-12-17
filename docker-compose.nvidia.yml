@@ -1,0 +1,10 @@
+services:
+  ollama:
+    # NVIDIA GPUが使える環境のみ
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

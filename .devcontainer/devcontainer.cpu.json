@@ -1,0 +1,11 @@
+{
+  "name": "mdcheck-cpu",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "overrideCommand": true,
+  "postCreateCommand": "uv sync",
+  "postStartCommand": "uv run mdcheck --pull-model"
+}

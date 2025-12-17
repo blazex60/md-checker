@@ -1,7 +1,9 @@
 [project]
-name = "interactive-novel"
+name = "mdcheck"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-requires-python = ">=3.14"
-dependencies = []
+description = "Markdown checker with optional local LLM advice via Ollama"
+requires-python = ">=3.11"
+dependencies = ["requests"]
+
+[project.scripts]
+mdcheck = "mdcheck.cli:main"
