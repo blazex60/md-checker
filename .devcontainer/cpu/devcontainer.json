@@ -1,7 +1,7 @@
 {
   "name": "mdcheck-cpu",
   "dockerComposeFile": [
-    "../docker-compose.yml"
+    "../../docker-compose.yml"
   ],
   "service": "app",
   "workspaceFolder": "/workspace",

@@ -1,8 +1,8 @@
 {
-  "name": "mdcheck-amd-rocm",
+  "name": "mdcheck-nvidia",
   "dockerComposeFile": [
-    "../docker-compose.yml",
-    "../docker-compose.amd.yml"
+    "../../docker-compose.yml",
+    "../../docker-compose.nvidia.yml"
   ],
   "service": "app",
   "workspaceFolder": "/workspace",
