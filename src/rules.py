@@ -1,24 +1,30 @@
 import re
 
 def check_header_spacing(lines: list[str]) -> list[str]:
-    """見出し(#)の後にスペースがあるかチェック"""
+    """見出し(#)の後に適切な空白があるかチェック"""
     issues = []
     for i, line in enumerate(lines, 1):
-        # 修正箇所: [^ \n] -> [^\s]
-        # \s は半角スペース、全角スペース、タブ、改行などをすべて「空白」として扱います
-        # 「#の塊」の直後に「空白以外」が来ている場合のみエラーとみなします
-        if re.match(r"^#+[^\s]", line):
-            issues.append(f"Line {i}: Header missing space (e.g. '# Title') -> {line.strip()}")
+        stripped = line.lstrip()
+        if stripped.startswith('#'):
+            match = re.match(r"^(#+)(.*)", stripped)
+            if match:
+                rest = match.group(2)
+                if not rest:
+                    continue
+                
+                first_char = rest[0]
+                if not first_char.isspace():
+                    char_code = hex(ord(first_char))
+                    issues.append(f"行 {i}: 見出しの後に空白がありません (文字コード: {char_code}) -> {line.strip()}")
+                    
     return issues
 
 def check_trailing_whitespace(lines: list[str]) -> list[str]:
     """行末の不要な空白をチェック"""
     issues = []
     for i, line in enumerate(lines, 1):
-        # 行末が「空白+改行」または「タブ+改行」で終わっているか
-        # ※Markdownの「2スペース改行」を許容したい場合は、ここを調整する必要があります
         if line.endswith(" \n") or line.endswith("\t\n"):
-            issues.append(f"Line {i}: Trailing whitespace detected")
+            issues.append(f"行 {i}: 行末に余計な空白があります")
     return issues
 
 def check_todos(lines: list[str]) -> list[str]:
@@ -26,15 +32,11 @@ def check_todos(lines: list[str]) -> list[str]:
     issues = []
     for i, line in enumerate(lines, 1):
         if "TODO" in line or "FIXME" in line:
-            issues.append(f"Line {i}: Found TODO/FIXME -> {line.strip()}")
+            issues.append(f"行 {i}: TODO/FIXMEが見つかりました -> {line.strip()}")
     return issues
 
 def lint_with_rules(text: str) -> dict:
-    """
-    ルールベースの静的解析を実行する
-    """
     lines = text.splitlines(keepends=True)
-    
     suggestions = []
     suggestions.extend(check_header_spacing(lines))
     suggestions.extend(check_trailing_whitespace(lines))
