@@ -65,6 +65,9 @@ def lint_with_llm(markdown_text: str) -> Dict[str, Any]:
     }
 
     r = requests.post(f"{_host()}/api/chat", json=payload, timeout=120)
+    if r.status_code != 200:
+        # エラーの詳細（"model 'gemma2:2b' not found" など）を表示して終了
+        raise ValueError(f"Ollama API Error ({r.status_code}): {r.text}")
     r.raise_for_status()
     data = r.json()
     # Ollamaは message.content がJSON文字列で返る
