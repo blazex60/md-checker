@@ -4,6 +4,10 @@ import os
 # pyrefly: ignore [missing-import]
 import requests
 from typing import Any, Dict, List
+from dotenv import load_dotenv
+
+# .envファイルを読み込む
+load_dotenv()
 
 
 def _host() -> str:
@@ -11,7 +15,7 @@ def _host() -> str:
 
 
 def _model() -> str:
-    return os.getenv("OLLAMA_MODEL", "gemma2:2b")
+    return os.getenv("OLLAMA_MODEL", "gemma2:2")
 
 
 def pull_model(model: str | None = None) -> None:
