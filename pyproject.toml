@@ -5,5 +5,13 @@ description = "Markdown checker with optional local LLM advice via Ollama"
 requires-python = ">=3.11"
 dependencies = ["requests"]
 
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]
+
 [project.scripts]
 mdcheck = "mdcheck.cli:main"
+
+[tool]
