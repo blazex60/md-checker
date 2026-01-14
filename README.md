@@ -36,3 +36,54 @@ pip install -e .
 
 # uvの場合
 uv pip install -e .
+```
+
+## 使い方
+
+### 基本的なチェック
+ファイルパス、またはディレクトリパスを指定して実行します。
+ディレクトリを指定した場合、その中の `.md` ファイルすべてをチェックします。
+
+```bash
+# 単一ファイル
+mdcheck README.md
+
+# ディレクトリ一括
+mdcheck docs/
+```
+
+実行結果には、フォーマットの問題点が表示されます。
+
+### AIアドバイスの有効化 (`--llm`)
+`--llm` オプションを付けると、ルールベースチェックの後にAIによる解析が実行されます。
+※ 事前にOllamaを起動しておく必要があります。
+
+```bash
+mdcheck README.md --llm
+```
+
+### モデルの準備 (`--pull-model`)
+デフォルトで使用するモデル（`gemma2:2b`）がローカルにない場合、以下のコマンドでダウンロードできます。
+
+```bash
+mdcheck --pull-model
+```
+
+## 設定
+
+環境変数を使用することで、Ollamaの接続先や使用モデルを変更できます。`.env` ファイルに記述することも可能です。
+
+| 環境変数 | デフォルト値 | 説明 |
+| --- | --- | --- |
+| `OLLAMA_HOST` | `http://localhost:11434` | Ollamaサーバーのアドレス |
+| `OLLAMA_MODEL` | `gemma2:2b` | 使用するLLMモデル |
+
+**設定例 (.env):**
+```ini
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=gemma3:4b
+```
+
+## ライセンス
+
+[MIT License](LICENSE)
