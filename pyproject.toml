@@ -3,7 +3,14 @@ name = "mdcheck"
 version = "0.1.0"
 description = "Markdown checker with optional local LLM advice via Ollama"
 requires-python = ">=3.11"
-dependencies = ["requests", "python-dotenv"]
+dependencies = [
+    "requests",
+    "python-dotenv",
+    "PySide6>=6.6.0",
+    "markdown>=3.5.0",
+    "pymdown-extensions>=10.5.0",
+    "pygments>=2.17.0",
+]
 
 [tool.pyrefly]
 project-includes = [
@@ -13,5 +20,6 @@ project-includes = [
 
 [project.scripts]
 mdcheck = "mdcheck.cli:main"
+mdcheck-gui = "mdcheck.gui:main"
 
 [tool]

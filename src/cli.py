@@ -88,11 +88,17 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("path", nargs="?", help="Markdownファイルまたはディレクトリのパス")
     p.add_argument("--llm", action="store_true", help="OllamaによるAIアドバイスを有効化")
     p.add_argument("--pull-model", action="store_true", help="Ollamaモデルをpullして終了")
+    p.add_argument("--gui", action="store_true", help="GUIモードで起動")
     args = p.parse_args(argv)
 
     if args.pull_model:
         pull_model()
         print(f"[OK] モデルをpullしました: {os.getenv('OLLAMA_MODEL', 'gemma2:2b')}")
+        return
+    
+    if args.gui:
+        from gui import main as gui_main
+        gui_main()
         return
 
     if not args.path:
