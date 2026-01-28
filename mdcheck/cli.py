@@ -61,7 +61,7 @@ def process_file(file_path: Path, use_llm: bool) -> None:
     
     try:
         text = file_path.read_text(encoding="utf-8")
-    except Exception as e:
+    except (IOError, UnicodeDecodeError, PermissionError) as e:
         print(f"ファイル読み込みエラー: {e}")
         return
 
@@ -73,11 +73,22 @@ def process_file(file_path: Path, use_llm: bool) -> None:
     if use_llm:
         print("LLMの応答を待機中...")
         try:
-            advice = lint_with_llm(text[:1500])
+            # テキストの長さ制限
+            MAX_LLM_TEXT = 1500
+            text_to_analyze = text[:MAX_LLM_TEXT]
+            if len(text) > MAX_LLM_TEXT:
+                print(f"⚠️  警告: テキストが長いため、最初の{MAX_LLM_TEXT}文字のみを解析します\n")
+            
+            advice = lint_with_llm(text_to_analyze)
             print_analysis(advice, source="AI (Ollama)")
+        except (ConnectionError, TimeoutError) as e:
+            print(f"LLM接続エラー: {e}")
+            print("(Ollamaが起動しているか確認してください)")
+        except ValueError as e:
+            print(f"LLMレスポンスエラー: {e}")
+            print("(モデルがpullされているか確認してください)")
         except Exception as e:
-            print(f"LLMエラー: {e}")
-            print("(Ollamaが起動しているか、モデルがpullされているか確認してください)")
+            print(f"予期しないLLMエラー: {e}")
     else:
         print("  -> AIチェックはスキップされました。 --llm で有効化できます。")
         print()

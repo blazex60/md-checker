@@ -1,3 +1,0 @@
-[console_scripts]
-mdcheck = mdcheck.cli:main
-mdcheck-gui = mdcheck.gui:main
