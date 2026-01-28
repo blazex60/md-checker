@@ -26,8 +26,8 @@ from markdown.extensions.fenced_code import FencedCodeExtension
 from markdown.extensions.tables import TableExtension
 from pymdownx import superfences
 
-from rules import lint_with_rules
-from ollama_client import lint_with_llm
+from mdcheck.rules import lint_with_rules
+from mdcheck.ollama_client import lint_with_llm
 
 
 class EditorPane(QPlainTextEdit):

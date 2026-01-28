@@ -4,9 +4,9 @@ import argparse
 import os
 from pathlib import Path
 
-# 相対インポート
-from ollama_client import pull_model, lint_with_llm
-from rules import lint_with_rules
+# パッケージインポート
+from mdcheck.ollama_client import pull_model, lint_with_llm
+from mdcheck.rules import lint_with_rules
 
 def print_analysis(advice: dict, source: str = "LLM") -> None:
     """解析結果を表示する"""
@@ -97,7 +97,7 @@ def main(argv: list[str] | None = None) -> None:
         return
     
     if args.gui:
-        from gui import main as gui_main
+        from mdcheck.gui import main as gui_main
         gui_main()
         return
 

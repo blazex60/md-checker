@@ -8,4 +8,4 @@ echo "🚀 MDCheck GUI (オフスクリーンモード) を起動します..."
 echo "注: このモードでは画面表示はされませんが、動作確認できます"
 echo ""
 
-uv run python src/gui.py
+uv run python -m mdcheck.gui

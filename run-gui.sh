@@ -15,4 +15,4 @@ echo ""
 echo "サンプルファイル: sample.md"
 echo ""
 
-uv run python src/gui.py
+uv run python -m mdcheck.gui

@@ -139,7 +139,7 @@ OLLAMA_MODEL=gemma3:4b
 
 ```
 mdcheck/
-├── src/                    # ソースコード
+├── mdcheck/                # ソースコード
 │   ├── cli.py             # CLIエントリーポイント
 │   ├── gui.py             # GUIアプリケーション
 │   ├── rules.py           # ルールベースのチェック処理
@@ -167,10 +167,10 @@ mdcheck/
 
 ```bash
 # CLI（開発モード）
-uv run python src/cli.py sample.md --llm
+uv run python -m mdcheck.cli sample.md --llm
 
 # GUI（開発モード）
-uv run python src/gui.py
+uv run python -m mdcheck.gui
 ```
 
 ## ライセンス
