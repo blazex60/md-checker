@@ -2,6 +2,7 @@
 
 from mdcheck.rules import lint_with_rules
 from mdcheck.ollama_client import lint_with_llm, pull_model
+from mdcheck.constants import MAX_LLM_TEXT_LENGTH
 
 __version__ = "0.1.0"
-__all__ = ["lint_with_rules", "lint_with_llm", "pull_model"]
+__all__ = ["lint_with_rules", "lint_with_llm", "pull_model", "MAX_LLM_TEXT_LENGTH"]

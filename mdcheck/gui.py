@@ -28,6 +28,7 @@ from pymdownx import superfences
 
 from mdcheck.rules import lint_with_rules
 from mdcheck.ollama_client import lint_with_llm
+from mdcheck.constants import MAX_LLM_TEXT_LENGTH
 
 
 class EditorPane(QPlainTextEdit):
@@ -335,8 +336,8 @@ class MDCheckGUI(QMainWindow):
                 self.current_file = path
                 self.setWindowTitle(f"MDCheck - {path.name}")
                 self.statusBar().showMessage(f"読み込み完了: {path.name}")
-            except Exception as e:
-                self.statusBar().showMessage(f"エラー: {e}")
+            except (IOError, UnicodeDecodeError, PermissionError) as e:
+                self.statusBar().showMessage(f"ファイル読み込みエラー: {e}")
     
     def save_file(self):
         """現在のファイルを保存"""
@@ -366,7 +367,7 @@ class MDCheckGUI(QMainWindow):
             text = self.editor.toPlainText()
             path.write_text(text, encoding="utf-8")
             self.statusBar().showMessage(f"保存完了: {path.name}")
-        except Exception as e:
+        except (IOError, UnicodeDecodeError, PermissionError) as e:
             self.statusBar().showMessage(f"保存エラー: {e}")
     
     def _on_editor_changed(self):
@@ -403,8 +404,13 @@ class MDCheckGUI(QMainWindow):
         text = self.editor.toPlainText()
         
         try:
-            # 長いテキストは先頭1500文字に制限
-            result = lint_with_llm(text[:1500])
+            # 長いテキストは先頭制限文字数に制限
+            text_to_analyze = text[:MAX_LLM_TEXT_LENGTH]
+            if len(text) > MAX_LLM_TEXT_LENGTH:
+                warning_msg = f"テキストが長いため、最初の{MAX_LLM_TEXT_LENGTH}文字のみを解析します"
+                self.issues.add_issue(f"⚠️  {warning_msg}", None, "ai")
+            
+            result = lint_with_llm(text_to_analyze)
             
             # 用語・固有名詞
             terms = result.get("terms", [])
@@ -429,9 +435,12 @@ class MDCheckGUI(QMainWindow):
             total = len(terms) + len(inconsistencies) + len(suggestions)
             self.statusBar().showMessage(f"AIチェック完了: {total}件の指摘")
             
-        except Exception as e:
-            self.issues.add_issue(f"❌ AIチェックエラー: {e}", None, "ai")
-            self.statusBar().showMessage(f"AIチェックエラー: {e}")
+        except (ConnectionError, TimeoutError) as e:
+            self.issues.add_issue(f"❌ AI接続エラー: {e}", None, "ai")
+            self.statusBar().showMessage("AIチェックエラー: Ollamaが起動しているか確認してください")
+        except ValueError as e:
+            self.issues.add_issue(f"❌ AIレスポンスエラー: {e}", None, "ai")
+            self.statusBar().showMessage("AIチェックエラー: モデルがpullされているか確認してください")
     
     def run_all_checks(self):
         """すべてのチェックを実行"""

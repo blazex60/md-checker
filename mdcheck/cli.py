@@ -7,6 +7,7 @@ from pathlib import Path
 # パッケージインポート
 from mdcheck.ollama_client import pull_model, lint_with_llm
 from mdcheck.rules import lint_with_rules
+from mdcheck.constants import MAX_LLM_TEXT_LENGTH
 
 def print_analysis(advice: dict, source: str = "LLM") -> None:
     """解析結果を表示する"""
@@ -74,10 +75,9 @@ def process_file(file_path: Path, use_llm: bool) -> None:
         print("LLMの応答を待機中...")
         try:
             # テキストの長さ制限
-            MAX_LLM_TEXT = 1500
-            text_to_analyze = text[:MAX_LLM_TEXT]
-            if len(text) > MAX_LLM_TEXT:
-                print(f"⚠️  警告: テキストが長いため、最初の{MAX_LLM_TEXT}文字のみを解析します\n")
+            text_to_analyze = text[:MAX_LLM_TEXT_LENGTH]
+            if len(text) > MAX_LLM_TEXT_LENGTH:
+                print(f"⚠️  警告: テキストが長いため、最初の{MAX_LLM_TEXT_LENGTH}文字のみを解析します\n")
             
             advice = lint_with_llm(text_to_analyze)
             print_analysis(advice, source="AI (Ollama)")
@@ -87,8 +87,6 @@ def process_file(file_path: Path, use_llm: bool) -> None:
         except ValueError as e:
             print(f"LLMレスポンスエラー: {e}")
             print("(モデルがpullされているか確認してください)")
-        except Exception as e:
-            print(f"予期しないLLMエラー: {e}")
     else:
         print("  -> AIチェックはスキップされました。 --llm で有効化できます。")
         print()
