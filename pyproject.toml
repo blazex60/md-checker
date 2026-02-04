@@ -10,6 +10,7 @@ dependencies = [
     "markdown>=3.5.0",
     "pymdown-extensions>=10.5.0",
     "pygments>=2.17.0",
+    "pyinstaller>=6.18.0",
 ]
 
 [tool.pyrefly]
